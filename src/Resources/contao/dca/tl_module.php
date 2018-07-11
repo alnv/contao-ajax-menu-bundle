@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['menuIcon'] = [
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['closeIcon'] = [
 
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['menuIcon'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['closeIcon'],
     'inputType' => 'fileTree',
 
     'eval' => [
