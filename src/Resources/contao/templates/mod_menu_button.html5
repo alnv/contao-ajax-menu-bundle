@@ -1,0 +1,108 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<form method="GET" action="" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" id="menu_id" name="menu_id" value="<?= $this->id ?>">
+    <button id="menu-open-button" class="menu-open-button">
+        <?php if ( $this->menuTitle ): ?><i><?= $this->menuTitle ?></i><?php endif; ?>
+        <?php if ( !empty( $this->menuIcon ) && is_array( $this->menuIcon ) ): ?>
+            <img src="<?= $this->menuIcon['path'] ?>" alt="<?= $this->menuAlt ?>">
+        <?php endif; ?>
+    </button>
+</form>
+<script async defer>
+    (function () {
+
+        'use strict';
+
+        if ( typeof window.addEventListener !== 'undefined' ) {
+
+            window.addEventListener( 'DOMContentLoaded', initialize, false );
+        }
+        
+        function initialize() {
+
+            var objMenuButton = document.getElementById('menu-open-button');
+            var strId = document.getElementById('menu_id').value;
+            var objBody = document.querySelector('body');
+
+            if ( objMenuButton !== null ) {
+
+                objMenuButton.addEventListener( 'click', function ( objEvent ) {
+
+                    objEvent.preventDefault();
+
+                    if ( !objMenuButton.classList.contains('active') ) {
+
+                        var objXHttp = new XMLHttpRequest();
+
+                        objMenuButton.classList.add( 'loading' );
+
+                        objXHttp.onreadystatechange = function() {
+
+                            if ( this.readyState === 4 && this.status === 200 ) {
+
+                                if ( this.responseText ) {
+
+                                    var objResponse = JSON.parse( this.responseText );
+
+                                    if ( objResponse.navigation !== null ) {
+
+                                        document.body.innerHTML += objResponse.navigation;
+                                        initialize();
+
+                                        objMenuButton = document.getElementById('menu-open-button');
+                                        objMenuButton.classList.remove( 'loading' );
+                                        objMenuButton.classList.add( 'active' );
+                                        objBody.classList.add( 'mobile_menu' );
+
+                                        setCloseHandler();
+                                    }
+                                }
+                            }
+                        };
+
+                        objXHttp.open( 'GET', '/parse-menu/' + strId, true );
+                        objXHttp.send();
+                    }
+
+                    return false;
+
+                }, false )
+            }
+        }
+        
+        function setCloseHandler() {
+
+            var objCloseButton = document.getElementById('menu-close-button');
+
+            if ( objCloseButton !== null ) {
+
+                objCloseButton.addEventListener( 'click', function ( objEvent ) {
+
+                    objEvent.preventDefault();
+
+                    var objMenuButton = document.getElementById('menu-open-button');
+                    var objOverlay = document.getElementById('overlay-navigation');
+                    var objBody = document.querySelector('body');
+
+                    if ( objOverlay !== null ) {
+
+                        objOverlay.parentNode.removeChild( objOverlay );
+                    }
+
+                    if ( objMenuButton !== null ) {
+
+                        objMenuButton.classList.remove( 'active' );
+                        objBody.classList.remove( 'mobile_menu' );
+                    }
+
+                    return false;
+
+                }, false );
+            }
+        }
+    })();
+</script>
+<?php $this->endblock(); ?>

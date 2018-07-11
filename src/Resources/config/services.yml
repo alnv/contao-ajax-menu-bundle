@@ -1,0 +1,4 @@
+services:
+    menu.datacontainer.module:
+        class: Alnv\ContaoAjaxMenuBundle\DataContainer\Module
+        public: true

@@ -1,0 +1,17 @@
+<div id="overlay-navigation" class="overlay-navigation">
+    <div class="overlay-navigation-align">
+        <div class="overlay-navigation-controller">
+            <button id="menu-close-button" class="menu-close-button">
+                <?php if ( $this->closeTitle ): ?>
+                    <i><?= $this->closeTitle ?></i>
+                <?php endif;?>
+                <?php if ( is_array( $this->closeIcon ) && !empty( $this->closeIcon ) ): ?>
+                    <img src="<?= $this->closeIcon['path'] ?>" alt="">
+                <?php endif; ?>
+            </button>
+        </div>
+        <div class="overlay-navigation-content">
+            <?= $this->navigation ?>
+        </div>
+    </div>
+</div>
