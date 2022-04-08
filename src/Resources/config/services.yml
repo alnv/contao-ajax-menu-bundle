@@ -1,4 +1,9 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    Alnv\ContaoAjaxMenuBundle\Controller\AjaxMenuController:
+        public: true
     menu.datacontainer.module:
         class: Alnv\ContaoAjaxMenuBundle\DataContainer\Module
         public: true

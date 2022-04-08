@@ -2,17 +2,15 @@
 
 namespace Alnv\ContaoAjaxMenuBundle\Controller;
 
-use Contao\Template;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  *
  * @Route(defaults={"_scope" = "frontend", "_token_check" = false })
  */
-class AjaxMenuController extends Controller {
+class AjaxMenuController extends \Contao\CoreBundle\Controller\AbstractController {
 
 
     /**
@@ -49,11 +47,7 @@ class AjaxMenuController extends Controller {
             'navigation' => $objTemplate->parse()
         ];
 
-        header('Content-Type: application/json');
-
-        echo json_encode( $arrResponse, 512 );
-
-        exit;
+        return new JsonResponse($arrResponse);
     }
 
 
