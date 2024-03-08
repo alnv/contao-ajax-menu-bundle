@@ -2,45 +2,45 @@
 
 namespace Alnv\ContaoAjaxMenuBundle\Controller;
 
+
+use Contao\CoreBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  *
- * @Route(defaults={"_scope" = "frontend", "_token_check" = false })
+ * @Route("/", defaults={"_scope" = "frontend", "_token_check" = false})
  */
-class AjaxMenuController extends \Contao\CoreBundle\Controller\AbstractController {
-
+class AjaxMenuController extends AbstractController
+{
 
     /**
      *
-     * @Route( "/parse-menu/{strId}", name="parse-menu" )
+     * @Route("/parse-menu/{strId}", methods={"POST", "GET"}, name="parse-menu")
      */
-    public function menu( $strId ) {
+    public function menu($strId)
+    {
 
-        $this->container->get( 'contao.framework' )->initialize();
+        $this->container->get('contao.framework')->initialize();
 
         $arrData = [];
         $objDatabase = \Database::getInstance();
-        $objMenuButton = $objDatabase->prepare( 'SELECT * FROM tl_module WHERE id = ?' )->limit( 1 )->execute( $strId );
+        $objMenuButton = $objDatabase->prepare('SELECT * FROM tl_module WHERE id = ?')->limit(1)->execute($strId);
 
-        $objTemplate = new \FrontendTemplate( 'mod_overlay_navigation' );
-        $strNavigation = \Controller::getFrontendModule( $objMenuButton->menuNavigation );
-        $strNavigation = \Controller::replaceInsertTags( $strNavigation );
+        $objTemplate = new \FrontendTemplate('mod_overlay_navigation');
+        $strNavigation = \Controller::getFrontendModule($objMenuButton->menuNavigation);
+        $strNavigation = \Controller::replaceInsertTags($strNavigation);
 
         $arrModule = $objMenuButton->row();
 
-        foreach ( $arrModule as $strKey => $strValue ) {
-
-            if ( $strKey == 'closeIcon' ) $strValue = $this->getIcon( $strValue );
-
-            $arrData[ $strKey ] = $strValue ?: '';
+        foreach ($arrModule as $strKey => $strValue) {
+            if ($strKey == 'closeIcon') $strValue = $this->getIcon($strValue);
+            $arrData[$strKey] = $strValue ?: '';
         }
 
         $arrData['navigation'] = $strNavigation;
-
-        $objTemplate->setData( $arrData );
+        $objTemplate->setData($arrData);
 
         $arrResponse = [
 
@@ -51,13 +51,14 @@ class AjaxMenuController extends \Contao\CoreBundle\Controller\AbstractControlle
     }
 
 
-    protected function getIcon( $strSingleSrc ) {
+    protected function getIcon($strSingleSrc)
+    {
 
-        if ( !$strSingleSrc ) return [];
+        if (!$strSingleSrc) return [];
 
-        $objFile = \FilesModel::findByUuid( $strSingleSrc );
+        $objFile = \FilesModel::findByUuid($strSingleSrc);
 
-        if ( $objFile !== null ) return $objFile->row();
+        if ($objFile !== null) return $objFile->row();
 
         return [];
     }

@@ -23,7 +23,7 @@
   "require": {
     "php": ">=7.4",
     "contao/core-bundle": "^4.9",
-    "sensio/framework-extra-bundle": "^5.2"
+    "sensio/framework-extra-bundle": "^6.2"
   },
   "config": {
     "preferred-install": "dist"

@@ -2,15 +2,15 @@
 
 namespace Alnv\ContaoAjaxMenuBundle\Modules;
 
-class MenuButtonModule extends \Module {
-
+class MenuButtonModule extends \Module
+{
 
     protected $strTemplate = 'mod_menu_button';
 
+    public function generate()
+    {
 
-    public function generate() {
-
-        if ( TL_MODE == 'BE' ) {
+        if (TL_MODE == 'BE') {
 
             $objTemplate = new \BackendTemplate('be_wildcard');
 
@@ -26,20 +26,20 @@ class MenuButtonModule extends \Module {
         return parent::generate();
     }
 
+    protected function compile()
+    {
 
-    protected function compile() {
-
-        $this->Template->menuIcon = $this->getIcon( $this->Template->menuIcon );
+        $this->Template->menuIcon = $this->getIcon($this->Template->menuIcon);
     }
 
+    protected function getIcon($strSingleSrc)
+    {
 
-    protected function getIcon( $strSingleSrc ) {
+        if (!$strSingleSrc) return [];
 
-        if ( !$strSingleSrc ) return [];
+        $objFile = \FilesModel::findByUuid($strSingleSrc);
 
-        $objFile = \FilesModel::findByUuid( $strSingleSrc );
-
-        if ( $objFile !== null ) return $objFile->row();
+        if ($objFile !== null) return $objFile->row();
 
         return [];
     }
