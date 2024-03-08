@@ -24,8 +24,15 @@ class AjaxMenuController extends AbstractController
 
         $this->container->get('contao.framework')->initialize();
 
-        $arrData = [];
+        global $objPage;
+
         $objDatabase = \Database::getInstance();
+        $objPageEntity = $objDatabase->prepare('SELECT * FROM tl_page ORDER BY id ASC')->limit(1)->execute();
+
+        $objPage = \PageModel::findByPk($objPageEntity->id);
+        $objPage->trail = [];
+
+        $arrData = [];
         $objMenuButton = $objDatabase->prepare('SELECT * FROM tl_module WHERE id = ?')->limit(1)->execute($strId);
 
         $objTemplate = new \FrontendTemplate('mod_overlay_navigation');
